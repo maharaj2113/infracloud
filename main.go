@@ -142,12 +142,15 @@ func (us *URLShortener) metrics(w http.ResponseWriter, r *http.Request) {
 	if len(domains) > 3 {
 		topDomains = domains[:3]
 	}
-	response := make(map[string]int)
+	response := ""
 	for _, entry := range topDomains {
-		response[entry.Domain] = entry.Count
+		response += fmt.Sprintf("%s: %d, ", entry.Domain, entry.Count)
+		fmt.Sprintln()
 	}
 
-	json.NewEncoder(w).Encode(response)
+	// Return the JSON response
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintln(w, response)
 }
 
 // function to display the list of shortURLs and original URLS in the memory
